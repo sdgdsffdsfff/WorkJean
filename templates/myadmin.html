@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="content-Type" content="text/html" charset="UTF-8">
+    <script src="/static/js/jquery-2.1.1.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/flat-ui/css/flat-ui.css" rel="stylesheet">
+    <link href="/static/css/theme.css" rel="stylesheet">
+    <title></title>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#userinfo button').click(function(){
+                //alert($('option:selected').attr('name'));       // tester developer managerer
+                //alert($(this).attr('name'));                    // add look
+                //alert($(this).parent().find('input').val());    // input value
+                var url = "/admin_add/";
+                var data = {
+                    "data_text":($(this)).parent().find('input').val(),
+                    "data_type":($(this)).attr('name'),
+                    "data_who":($('option:selected')).attr('name')
+                };
+                $.ajax({
+                    url:url,
+                    data:data,
+                    type:"post",
+                    success:function(data){
+                        alert(data);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <div id="userinfo" class="navbar-form navbar-left">
+        <select class="form-control">
+            <option name="tester">测试人员</option>
+            <option name="developer">开发人员</option>
+            <option name="managerer">项目经理</option>
+        </select>
+        <input type="text" class="form-control" placeholder="输入姓名" />
+        <button class="btn btn-primary" name="add">添加</button>
+        <button class="btn btn-primary" name="look">查看</button>
+    </div>
+</div>
+</body>
+</html>
+

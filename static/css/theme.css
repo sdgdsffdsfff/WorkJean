@@ -1,0 +1,119 @@
+body{
+    background-color: #ECF0F1;
+}
+
+nav{
+    font-weight: bold;
+}
+
+/*
+  控制顶部导航中 图表和文本的间距
+*/
+nav ul li span{
+    margin-right: 10px;
+}
+
+/*控制mainbody出现在navbar下方*/
+#hccontainer-byman{
+    margin-top: 50px;
+}
+
+#login{
+    margin-top: 200px;
+}
+
+#task{
+    margin-top: 60px;
+}
+/*mainbody块的div样式*/
+.main{
+    margin-top: 0px;
+}
+
+#task_info1{
+    width: 59%;
+    float: left;
+}
+#task_info2{
+    width: 39%;
+    float: right;
+}
+
+/*增加任务排期按钮*/
+.add_task{
+    /*margin-bottom: 40px;*/
+}
+
+/*新增任务层*/
+#add_test_task{
+    /*默认隐藏层*/
+    display: none;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+#add_test_task div{
+    margin-bottom: 5px;
+}
+#add_dev_task div{
+    margin-bottom: 5px;
+}
+#add_dev_task{
+    /*默认隐藏层*/
+    display: none;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+/*增加按钮*/
+#add_test_task button{
+    margin-top: 5px;
+}
+#add_dev_task button{
+    margin-top: 5px;
+}
+
+/*输入框*/
+.add_left div{
+    margin-top: 5px;
+}
+.add_right div{
+    margin-top: 5px;
+}
+/*增加任务标题*/
+.add_title{
+    margin-right: auto;
+    margin-left: auto;
+    color: #FFFFFF;
+    width: 97%;
+    text-align: center;
+    background-color: #BDC3C7;
+}
+
+/*测试任务详细的样式*/
+#test_task_detail{
+    font-size: 14px;
+    text-align: center;
+}
+#test_task_detail tbody td{
+    line-height: 38px;
+}
+/*开发任务详细的样式*/
+#dev_task_detail{
+    font-size: 14px;
+    text-align: center;
+}
+#dev_task_detail tbody td{
+    line-height: 38px;
+}
+
+/*tooltip元素*/
+.atip{
+    display: block;
+}
+
+/*任务数字的样式*/
+.task_num{
+    padding-left: 20px;
+}
+

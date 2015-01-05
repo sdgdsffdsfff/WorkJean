@@ -1,0 +1,29 @@
+    <table class="table table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <td>项目编号</td>
+                <td>项目名称</td>
+                <td>接口数</td>
+                <td>用例数</td>
+                <td>检查点数</td>
+                <td>发现BUG数</td>
+                <td>遗漏BUG数</td>
+                <td colspan="3">快速操作</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rs in interface_info %}
+                <tr>
+                    <td>{{ rs.task_id }}</td>
+                    <td>{{ rs.task_name }}</td>
+                    <td>{{ rs.task_interface_num }}</td>
+                    <td>{{ rs.task_case_num }}</td>
+                    <td>{{ rs.task_check_num }}</td>
+                    <td>{{ rs.task_find_bug }}</td>
+                    <td>{{ rs.task_unfind_bug }}</td>
+                    <td><a href="/interface_config/addinterfaceinfo/?task_id={{ rs.task_id }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span>增加接口信息</a></td>
+                    <td><a href="/download/{{ rs.task_name }}测试报告.xlsx" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-download-alt"></span>Download</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

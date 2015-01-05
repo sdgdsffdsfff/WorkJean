@@ -1,0 +1,241 @@
+{% extends "Task.html" %}
+<!DOCTYPE html>
+<html>
+{% block head %}{{ block.super }}{% endblock %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+
+{% block mainbody %}
+    <!-- mainbody -->
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li><a href="#">配置管理</a></li>
+            <li class="active">{{ config_type }}</li>
+        </ol>
+    </div>
+
+    <!--users panel-->
+    <div class="row placeholders">
+        <!--Testers panel-->
+        <div class="col-xs-6 col-sm-3 placeholder" id="tester">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">金融测试(技术)组</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for tester in testers %}
+                            <li class="list-group-item" isChecked="false"><a href="#" style="display: block">{{ tester.t_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                <a data-toggle="modal" href="#modal_add" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span></a>
+                <button class="btn btn-primary" name="del"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+            </div>
+        </div>
+
+        <!--Dever panel-->
+        <div class="col-xs-6 col-sm-3 placeholder" id="dever">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">金融开发组</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for dever in devers %}
+                            <li class="list-group-item" isChecked="false"><a href="#" style="display: block">{{ dever.d_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                <a data-toggle="modal" href="#modal_add" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span></a>
+                <button class="btn btn-primary" name="del"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+            </div>
+        </div>
+
+        <!--Dever panel-->
+        <div class="col-xs-6 col-sm-3 placeholder" id="projecter">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">金融项目经理组</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for project_manager in project_managers %}
+                            <li class="list-group-item" isChecked="false"><a href="#" style="display: block">{{ project_manager.m_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                <a data-toggle="modal" href="#modal_add" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span></a>
+                <button class="btn btn-primary" name="del"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+            </div>
+        </div>
+
+        <!--Dever panel-->
+        <div class="col-xs-6 col-sm-3 placeholder" id="producter">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">金融产品经理组</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for product_manager in product_managers %}
+                            <li class="list-group-item" isChecked="false"><a href="#" style="display: block">{{ product_manager.m_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                <a data-toggle="modal" href="#modal_add" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span></a>
+                <button class="btn btn-primary" name="del"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--add user panel-->
+    <div class="modal fade" data-backdrop="static" id="modal_add" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+                    <h4 class="modal-title">增加人员</h4>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="text" placeholder="输入人员姓名"/>
+                </div>
+
+                <div class="modal-footer">
+                    <p>
+                        <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+                        <a id="add" type="button" class="btn btn-primary">Submit</a>
+                    </p>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--没选中 panel-->
+    <div class="modal fade" data-backdrop="static" id="modal_no_selected" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+                    <h4 class="modal-title">删除人员</h4>
+                </div>
+                <div class="modal-body">
+                    请选择需要删除的人员!
+                </div>
+
+                <div class="modal-footer">
+                    <p>
+                        <a type="button" class="btn btn-primary" data-dismiss="modal">Close</a>
+                    </p>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <!--javascript-->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            // ajax增加用户名称
+            // modal中的增加按钮
+            $("#add").click(function(){
+                var name = $(".modal").find("input").val();
+                if(name == ""){
+
+                }else {
+                    // alert(datato)
+                    var url = "/ajaxadduser/";
+                    var data = {
+                        "name": name,
+                        "to": datato
+                    };
+                    $.ajax({
+                        url: url,
+                        data: data,
+                        type: "post",
+                        success: function (data) {
+                            if (!data.status) {
+                                alert(data.data);
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+
+            // 高亮选中字段
+            $('div div div ul li').click(function () {
+                // 点击li
+                if ($(this).attr("isChecked") == "false") {
+                    $(this).attr("isChecked", "true").siblings().attr("isChecked","false");
+                    $(this).css('background-color', '#ECF0F1').siblings().css('background-color', '');
+                }else{
+                    $(this).attr("isChecked", "false");
+                    $(this).css("background-color", "");
+                }
+            });
+
+
+            // 各个组的增加按钮
+            $("#producter a").click(function(){
+                // datato申明为全局变量(供其他方法使用)
+                // datato = $("#producter").find("h3").text()
+                datato = "producter"
+            });
+            $("#projecter a").click(function(){
+                // datato = $("#projecter").find("h3").text()
+                datato = "projecter"
+            });
+            $("#dever a").click(function(){
+                // datato = $("#dever").find("h3").text()
+                datato = "dever"
+            });
+            $("#tester a").click(function(){
+                // datato = $("#tester").find("h3").text()
+                datato = "tester"
+            });
+            //==========================================================
+
+
+            // 按钮操作(目前只有删除按钮)
+            $("div button").click(function(){
+                var data = $(this).parent().find("li[isChecked='true']").text();    // 选中的某个li标签
+                if(data == ""){
+                    $("#modal_no_selected").modal();
+                }else{
+                    // alert(data)
+                    // alert(datato);
+                    // ajax删除用户
+                    var url = "/ajaxdeluser/"
+                    var data = {
+                        "name":data,
+                        "to":datato
+                    };
+                    $.ajax({
+                        url:url,
+                        data:data,
+                        type:"post",
+                        success:function(data){
+                            if(!data.status){
+                                alert(data.data);
+                            }else{
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        })
+    </script>
+{% endblock %}
+
+{% block foot %}
+
+{% endblock %}
+</body>
+</html>

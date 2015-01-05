@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+<head>
+    <meta http-equiv="content-Type" content="text/html" charset="UTF-8">
+    <!--
+      请注意,Bootstrap的所有JavaScript插件都依赖jQuery,因此jQuery必须在Bootstrap之前引入,
+      就像在基本模版中所展示的一样.在 bower.json文件中列出了Bootstrap所支持的jQuery版本.
+    -->
+    <script src="/static/js/jquery-2.1.1.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/flat-ui/css/flat-ui.css" rel="stylesheet">
+    <link href="/static/css/theme.css" rel="stylesheet">
+
+    <!--load highcharts图表库-->
+    <script src="/static/js/highcharts.js"></script>
+    <script src="/static/js/exporting.js"></script>
+
+
+    <script src="/static/js/popup_layer.js"></script>
+    <title>Work Jean Platform</title>
+    <!--
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("nav div li").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+            });
+        });
+    </script>
+    -->
+</head>
+{% endblock %}
+
+<body>
+{% block nav %}
+<!-- 顶部导航条 -->
+
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+
+    <div class="navbar-header navbar-left">
+        <a class="navbar-brand" href="/index/">WorkJean</a>
+    </div>
+
+    <div>
+        <ul class="nav navbar-nav navbar-left">
+            <li class=""><a href="/index/" ><span class="glyphicon glyphicon-home"></span>首页</a></li>
+            <li><a href="/task/"><span class="glyphicon glyphicon-tasks"></span>自动化任务排期</a></li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span>报告系统<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#"><span class="glyphicon glyphicon-book"></span>接口数据采集</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-pencil"></span>日报</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-pencil"></span>周报</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-th-list"></span>配置管理<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">配置管理项</a></li>
+                    <li class="divider"></li>
+                    <!--超级管理员-->
+                    {% if isAdmin %}
+                        <li><a href="/project_config/?type=项目管理"><span class="glyphicon glyphicon-cloud"></span>项目管理</a></li>
+                        <li><a href="/interface_config/?type=接口信息管理"><span class="glyphicon glyphicon-cloud"></span>接口信息管理</a></li>
+                        <li><a href="/module_config/?type=模块服务管理"><span class="glyphicon glyphicon-cloud"></span>模块服务管理</a></li>
+                        <li><a href="/user_config/?type=人员信息管理"><span class="glyphicon glyphicon-cloud"></span>人员信息管理</a></li>
+                        <li><a href="#" id="backupMysql"><span class="glyphicon glyphicon-cloud"></span>备份数据库</a></li>
+                    <!--一般用户-->
+                    {% else %}
+                        <li><a href="/project_config/?type=项目管理"><span class="glyphicon glyphicon-cloud"></span>项目管理</a></li>
+                        <li><a href="/interface_config/?type=接口信息管理"><span class="glyphicon glyphicon-cloud"></span>接口信息管理</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cloud"></span>模块服务管理</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-cloud"></span>人员信息管理</a></li>
+                    {% endif %}
+
+                </ul>
+            </li>
+
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="请输入关键字">
+                </div>
+                <a type="submit" class="btn btn-default">搜索</a>
+            </form>
+        </ul>
+
+
+        <ul class="nav navbar-nav navbar-right" style="margin-right: 30px !important;">
+            <li class="dropdown">
+                {% if hasEvent %}{% else %}<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-comment"></span>我的任务<span class="navbar-new">{{ myEventsNum }}</span></a>{% endif %}
+                <ul class="dropdown-menu" role="menu">
+                    {% for curuser_event in Curuser_Events %}
+                        {% if curuser_event.m_events_is_new == 1 %}
+                            <li><a href="/eventdetail/?event_id={{ curuser_event.m_events_id }}" style="font-weight:bold;color: #E74C3C;">{{ curuser_event.m_events_name | safe }}&nbsp;&nbsp;<span class="badge">new</span></a></li>
+                        {% else %}
+                            <li><a href="/eventdetail/?event_id={{ curuser_event.m_events_id }}" style="font-weight:bold;">{{ curuser_event.m_events_name | safe }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li><a href="/allevent/" style="font-weight: bold;color: #E67E22;">查看所有任务(这里只显示最新的5个任务)</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right" style="margin-right: 30px !important;">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome，{{ curuser }}<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="/adminsettings"><span class="glyphicon glyphicon-wrench"></span>我的设置</a></li>
+                    <li><a href="/logout/"><span class="glyphicon glyphicon-edit"></span>退出登录</a></li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#backupMysql").click(function(){
+            $.ajax({
+                url:'/backup_mysql/',
+                data:{},
+                type:'post',
+                success:function(data){
+                    alert(data.data);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block mainbody %}
+
+    <script type="text/javascript">
+        var task_status = new Array();
+        var task_status_num = new Array();
+        var task_type = new Array();
+        var task_type_num = new Array();
+
+        {% for k,v in result_status.items %}
+            task_status.push("{{ k }}")
+            task_status_num.push({{ v }})
+        {% endfor %}
+
+
+        // [['xx',xx],['xx',xx],...]
+        var result = [];
+        {% for k,v in result_type.items %}
+            var temp = [];
+            temp.push("{{ k }}",{{ v }})
+            result.push(temp)
+        {% endfor %}
+
+
+
+        $(document).ready(function(){
+            $('#task_info1').highcharts({
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: '自动化各状态任务数量'
+                },
+                subtitle: {
+                    text: 'Source: Wikipedia.org'
+                },
+                xAxis: {
+                    categories: task_status,
+                    title: {
+                        text: '任务状态'
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '个数',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    x: -40,
+                    y: 100,
+                    floating: true,
+                    borderWidth: 0,
+                    backgroundColor: '#FFFFFF',
+                    shadow: true
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: '自动化任务排期',
+                    data: task_status_num
+                }]
+            });
+
+            // 饼图
+            $('#task_info2').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: '自动化各类型任务数量比'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            connectorColor: '#000000',
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'task type',
+                    data: result
+                }]
+            });
+        });
+    </script>
+    <!-- mainbody -->
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li class="active">首页</li>
+        </ol>
+    </div>
+    <div id="task_info1"></div>
+    <div id="task_info2"></div>
+{% endblock %}
+
+{% block foot %}
+{% endblock %}
+
+</body>
+</html>

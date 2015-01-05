@@ -1,0 +1,102 @@
+{% extends "index.html" %}
+<!DOCTYPE html>
+<html>
+{% block head %}{{ block.super }}{% endblock %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+
+{% block mainbody %}
+    <!-- mainbody -->
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li class="active">自动化任务排期</li>
+        </ol>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+
+            <!--所有任务-->
+            <div class="col-sm-12">
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">所有任务 ({{ all_task_num }})</h3>
+                    </div>
+
+                    <div class="task_num panel-body">
+
+                        <!--筛选条件-->
+                        <div id="conditions" style="margin-bottom: 20px;">
+                            <button class="btn btn-sm btn-primary" isSelected="true" name="unstart">未开始 ({{ pro_unstart_num }})</button>
+                            <button class="btn btn-sm btn-primary" isSelected="true" name="inprogress">进行中 ({{ pro_inprogress_num }})</button>
+                            <button class="btn btn-sm btn-primary" isSelected="true" name="end">已结束 ({{ pro_end_num }})</button>
+                            <button class="btn btn-sm btn-primary" isSelected="true" name="cancel">已取消 ({{ pro_cancel_num }})</button>
+                        </div>
+                        <!--结果-->
+                        <div id="TaskInfo">
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script language="JavaScript">
+        $(document).ready(function(){
+            /*
+                页面加载的时候加载ajax内容
+                默认情况下没有数据
+             */
+            var url = "/ajaxgettaskinfo/";
+            var data = {"task_status":"0"}
+            $.post(url,data,function(res){$("#TaskInfo").html(res);});
+
+            /*
+                点击 “未开始”、“进行中”等
+                首先更改样式以及属性
+             */
+            $("#conditions button").click(function(){
+                var data = {"task_status":""}
+                // 先更改属性和按钮样式
+                if($(this).attr("isSelected")=="false"){
+                    $(this).attr("isSelected", "true");
+                    $(this).attr("class","btn btn-sm btn-primary")
+                }else{
+                    $(this).attr("isSelected", "false");
+                    $(this).attr("class","btn btn-sm btn-default")
+                }
+                // 遍历所有button,查找被选中的button
+                $("#conditions button").each(function(){
+                    if($(this).attr("isSelected")=="true"){
+                        var tmp
+                        if($(this).attr("name")=="unstart"){
+                            tmp = '1';
+                        }else if($(this).attr("name")=="inprogress"){
+                            tmp = '2';
+                        }else if($(this).attr("name")=="end"){
+                            tmp = '3';
+                        }else{
+                            tmp = '4'
+                        }
+                        data["task_status"] += tmp
+                    }
+                });
+                // alert(data["task_status"]);
+                $.post(url,data,function(res){$("#TaskInfo").html(res);});
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block foot %}
+    <!--footbody-->
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="content-Type" content="text/html" charset="UTF-8">
+    <title></title>
+</head>
+<style type="text/css">
+    table{
+        font-size: 16px;
+        margin-top: 20px;
+        margin-right: 10px;
+    }
+</style>
+<body>
+<div class="container-fluid">
+{% if pro_info.t_id %}
+    <table class="table table-bordered table-condensed table-hover">
+            <tr>
+                <td style="width: 25%;">编号</td>
+                <td>{{ pro_info.t_id }}</td>
+            </tr>
+            <tr>
+                <td>项目名称</td>
+                <td>{{ pro_info.t_name }}</td>
+            </tr>
+            <tr>
+                <td>性能</td>
+                <td>{{ pro_info.t_is_performance }} (0否  1是)</td>
+            </tr>
+            <tr>
+                <td>项目类型</td>
+                <td>{{ pro_info.t_type }} (X新项目  G技术改造  N内部项目)</td>
+            </tr>
+            <tr>
+                <td>项目经理</td>
+                <td>{{ pro_info.t_manager }}</td>
+            </tr>
+            <tr>
+                <td>负责测试人员</td>
+                <td>{{ pro_info.t_tester }}</td>
+            </tr>
+            <tr>
+                <td>实施测试人员</td>
+                <td>{{ pro_info.t_s_tester }}</td>
+            </tr>
+            <tr>
+                <td>前置开始时间</td>
+                <td>{{ pro_info.t_pre_start_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>提测时间</td>
+                <td>{{ pro_info.t_test_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>前置结束时间</td>
+                <td>{{ pro_info.t_pre_end_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>回归开始时间</td>
+                <td>{{ pro_info.t_re_start_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>回归结束时间</td>
+                <td>{{ pro_info.t_re_end_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>项目发布时间</td>
+                <td>{{ pro_info.t_pro_release_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>项目当前阶段</td>
+                <td>{{ pro_info.t_phase }}</td>
+            </tr>
+            <tr>
+                <td>目标</td>
+                <td>{{ pro_info.t_target }}</td>
+            </tr>
+    </table>
+
+{% else %}
+    <table class="table table-bordered table-condensed table-hover">
+            <tr>
+                <td>编号</td>
+                <td>{{ pro_info.d_id }}</td>
+            </tr>
+            <tr>
+                <td>项目名称</td>
+                <td>{{ pro_info.d_name }}</td>
+            </tr>
+            <tr>
+                <td>性能</td>
+                <td>{{ pro_info.d_is_performance }} (0否  1是)</td>
+            </tr>
+            <tr>
+                <td>项目类型</td>
+                <td>{{ pro_info.d_type }} (X新项目  G技术改造  N内部项目)</td>
+            </tr>
+            <tr>
+                <td>产品经理</td>
+                <td>{{ pro_info.d_product_manager }}</td>
+            </tr>
+            <tr>
+                <td>项目经理</td>
+                <td>{{ pro_info.d_project_manager }}</td>
+            </tr>
+            <tr>
+                <td>开发人员</td>
+                <td>{{ pro_info.d_dever }}</td>
+            </tr>
+            <tr>
+                <td>开始时间</td>
+                <td>{{ pro_info.d_start_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>开发时间</td>
+                <td>{{ pro_info.d_dev_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>测试时间</td>
+                <td>{{ pro_info.d_test_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>试用时间</td>
+                <td>{{ pro_info.d_use_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>发布时间</td>
+                <td>{{ pro_info.d_release_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>结束时间</td>
+                <td>{{ pro_info.d_end_time | date:"Y-m-d" | default:None }}</td>
+            </tr>
+            <tr>
+                <td>当前阶段</td>
+                <td>{{ pro_info.d_phase }}</td>
+            </tr>
+            <tr>
+                <td>目标</td>
+                <td>{{ pro_info.d_target }}</td>
+            </tr>
+    </table>
+{% endif %}
+    <p style="float: right;"><a type="button" class="btn btn-primary" data-dismiss="modal">Close</a></p>
+</div>
+</body>
+</html>

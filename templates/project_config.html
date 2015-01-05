@@ -1,0 +1,714 @@
+{% extends "Task.html" %}
+{% load pagination_tags %}
+<!DOCTYPE html>
+<html>
+{% block head %}{{ block.super }}{% endblock %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+
+{% block mainbody %}
+    <!-- mainbody -->
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li><a href="#">配置管理</a></li>
+            <li class="active"><a href="/project_config/?type=项目管理">{{ config_type }}</a></li>
+            <li>
+                <a id="btn_add_test_task" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span>增加测试项目</a>
+                <a id="btn_add_dev_task" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span>增加开发项目</a>
+            </li>
+        </ol>
+
+    </div>
+    <div class="container-fluid" id="mainBody">
+        <div class="row-fluid">
+
+            <div class="col-md-4" id="unstart">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">未开始 ({{ pro_unstart_num }})</h3>
+                    </div>
+                    <div class="task_num panel-body">
+                        <ul class="list-group">
+                            <!--分页-->
+{#                            {% autopaginate unstart 5 %}#}
+                                {% for i in unstart %}
+                                    <li class="list-group-item" isChecked="false">
+                                        <a href="#" style="display: block">
+                                            {{ i.id }}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;{{ i.name }}
+                                        </a>
+                                    </li>
+{#                            {% paginate %}#}
+                            {% endfor %}
+                        </ul>
+
+                        <button class="btn btn-primary" name="start">开始</button>
+                        <button class="btn btn-danger" name="cancel">取消</button>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-warning" name="modify">修改</a>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-success" name="look">查看</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" id="inprogress">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">进行中 ({{ pro_inprogress_num }})</h3>
+                    </div>
+                    <div class="task_num panel-body">
+                        <ul class="list-group">
+                            <!--分页-->
+{#                            {% autopaginate inprogress 5 %}#}
+                                {% for i in inprogress %}
+                                    <li class="list-group-item" isChecked="false">
+                                        <a href="#" style="display: block">
+                                            {{ i.id }}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;{{ i.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+{#                            {% paginate %}#}
+                        </ul>
+                        <button class="btn btn-info" name="end">结束</button>
+                        <button class="btn btn-danger" name="cancel">取消</button>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-warning" name="modify">修改</a>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-success" name="look">查看</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" id="end">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">已结束 ({{ pro_end_num }})</h3>
+                    </div>
+                    <div class="task_num panel-body">
+                        <ul class="list-group">
+                            <!--分页-->
+                            {% autopaginate end 5 %}    <!--每页显示多少项-->
+                                {% for i in end %}
+                                    <li class="list-group-item" isChecked="false">
+                                        <a href="#" style="display: block">
+                                            {{ i.id }}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;{{ i.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% paginate 1 %}        <!--当前页左右两边显示的页数-->
+                        </ul>
+                        <button class="btn btn-inverse" name="restart">恢复</button>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-warning" name="modify">修改</a>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-success" name="look">查看</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" id="cancel">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title ">已取消 ({{ pro_cancel_num }})</h3>
+                    </div>
+                    <div class="task_num panel-body">
+                        <ul class="list-group">
+                            <!--分页-->
+{#                            {% autopaginate cancel 5 %}#}
+                                {% for i in cancel %}
+                                    <li class="list-group-item" isChecked="false">
+                                        <a href="#" style="display: block">
+                                            {{ i.id }}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;{{ i.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+{#                            {% paginate %}#}
+                        </ul>
+                        <button class="btn btn-inverse" name="restart">恢复</button>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-warning" name="modify">修改</a>
+                        <a role="button" data-toggle="modal" data-target="#p_info" class="btn btn-success" name="look">查看</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--
+        <div class="col-md-4">
+            <a id="btn_add_test_task" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span>增加测试项目</a>
+            <a id="btn_add_dev_task" class="btn btn-primary btn-large"><span class="glyphicon glyphicon-plus"></span>增加开发项目</a>
+        </div>
+    -->
+    </div>
+
+
+
+    <div id="add_test_task">
+            <div class="add_title">增加测试任务排期</div>
+            <!--左侧开始-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务名称:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="t_name"  placeholder="任务名称">
+                </div>
+            </div>
+
+            <!--单选框-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">是否性能项目:</label>
+                <div class="radio col-sm-10">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label>
+                        <input type="radio" name="1_isperformance" id="yes" value="1">是
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label>
+                        <input type="radio" name="1_isperformance" id="no" value="0" checked>否
+                    </label>
+                </div>
+            </div>
+            <!--over-->
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目类型:</label>
+                <div class="col-sm-10">
+                    <select name="t_type" class="form-control">
+                    {% for tasktype in TaskType %}
+                        <option>{{ tasktype.t_name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目经理:</label>
+                <div class="col-sm-10">
+                    <select name="t_manager" class="form-control">
+                        {% for manager in Project_Manager %}
+                            <option>{{ manager.m_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="display: none;">
+                <label class="col-sm-2 control-label">负责测试人员:</label>
+                <div class="col-sm-10">
+                    <select name="t_f_tester" class="form-control" multiple>
+                            <!--这个字段默认-->
+                            <option selected>高明国</option>
+                            <option selected>李艳秋</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">实施测试人员:</label>
+                <div class="col-sm-10">
+                    <select name="t_s_tester" class="form-control" multiple style="height: 240px;">
+                        {% for s_tester in Tester %}
+                            <option>{{ s_tester.t_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">前置开始时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="t_pre_start_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">提测时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="t_test_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">前置结束时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="t_pre_end_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">回归开始时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="t_re_start_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">回归结束时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="t_re_end_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目发布时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="t_pro_release_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目当前状态:</label>
+                <div class="col-sm-10">
+                    <select name="t_status" class="form-control">
+                        {% for taskstatus in TaskStatus %}
+                            <option>{{ taskstatus.t_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目当前阶段:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="t_phase" class="form-control" placeholder="项目当前阶段">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">目标:</label>
+                <div class="col-sm-10">
+                    <textarea name="t_target" rows="3" class="form-control" placeholder="目标"></textarea>
+                </div>
+            </div>
+
+            <input type="hidden" name="t_task_attribute" value="1">
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a type="submit" class="btn btn-primary btn-large btn-block">增加</a>
+                </div>
+            </div>
+    </div>
+    <!--测试任务排期over-->
+
+
+
+
+
+    <!--增加开发任务排期-->
+    <div id="add_dev_task">
+            <div class="add_title">增加开发任务排期</div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">任务名称:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="d_name"  placeholder="任务名称">
+                </div>
+            </div>
+
+            <!--单选框-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">是否性能项目:</label>
+                <div class="radio col-sm-10">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label>
+                        <input type="radio" name="2_isperformance" id="yes" value="1">是
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label>
+                        <input type="radio" name="2_isperformance" id="no" value="0" checked>否
+                    </label>
+                </div>
+            </div>
+            <!--over-->
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目类型:</label>
+                <div class="col-sm-10">
+                    <select name="d_type" class="form-control">
+                    {% for tasktype in TaskType %}
+                        <option>{{ tasktype.t_name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">产品经理:</label>
+                <div class="col-sm-10">
+                    <select name="d_product_manager" class="form-control" multiple>
+                        {% for manager in Product_Manager %}
+                            <option>{{ manager.m_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目经理:</label>
+                <div class="col-sm-10">
+                    <select name="d_project_manager" class="form-control" multiple style="height: 170px;">
+                        {% for manager in Project_Manager %}
+                            <option>{{ manager.m_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开发人员:</label>
+                <div class="col-sm-10">
+                    <select name="d_dever" class="form-control" multiple style="height: 240px;">
+                        {% for dever in Tester %}
+                            <option>{{ dever.t_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开始时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="d_start_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开发时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="d_dev_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">测试时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="d_test_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">试用时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="d_use_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">发布时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="d_release_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">结束时间:</label>
+                <div class="col-sm-10">
+                    <input type="date" name="d_end_time" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">当前状态:</label>
+                <div class="col-sm-10">
+                    <select name="d_status" class="form-control">
+                        {% for taskstatus in TaskStatus %}
+                            <option>{{ taskstatus.t_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目当前阶段:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="d_phase" class="form-control" placeholder="项目当前阶段">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">备注:</label>
+                <div class="col-sm-10">
+                    <textarea name="d_target" rows="3" class="form-control" placeholder="备注"></textarea>
+                </div>
+            </div>
+
+            <input type="hidden" name="d_task_attribute" value="2">
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <a type="submit" class="btn btn-primary btn-large btn-block">增加</a>
+                </div>
+            </div>
+    </div>
+    <!--增加开发任务排期over-->
+
+
+
+    <div class="modal fade" data-backdrop="static" id="modal_alert" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+                    <h4 class="modal-title">增加项目</h4>
+                </div>
+                <div class="modal-body">
+                    必填字段不能为空!
+                </div>
+
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+                    <!--<a type="button" class="btn btn-primary">Save changes</a>-->
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!--用于装载“查看单个项目”和“修改单个项目”-->
+    <div class="modal fade" data-backdrop="static" id="p_info" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+                    <h4 class="modal-title">错误</h4>
+                </div>
+                <div class="modal-body">
+                    请选中一个项目!!
+                </div>
+                <div class="modal-footer">
+                    <p>
+                        <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+                        <a id="add" type="button" class="btn btn-primary">Submit</a>
+                    </p>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+
+
+
+    <script style="text/javascript">
+        // 去除字符串中所有空格
+        function Trim(str,is_global){
+            var result;
+            result = str.replace(/(^\s+)|(\s+$)/g,"");
+            if(is_global.toLowerCase()=="g"){
+                result = result.replace(/\s/g,"");
+            }
+            return result;
+}
+        $(document).ready(function(){
+            $('div div div ul li').click(function(){
+                // 点击li
+                if ($(this).attr("isChecked") == "false") {
+                    $(this).attr("isChecked", "true").siblings().attr("isChecked","false");
+                    $(this).css('background-color', '#ECF0F1').siblings().css('background-color', '');
+                }else{
+                    $(this).attr("isChecked", "false");
+                    $(this).css("background-color", "");
+                }
+            });
+
+
+
+            // 点击“查看”和“修改”后，将元素增加href属性并指向第三方html页面,用以载入至modal中
+            $("#mainBody").find("a[name='look']").click(function(){
+                var pro_data = $(this).parent().find("li[isChecked='true']").text();    // 选中的某个li标签
+                pro_data = Trim(pro_data,"g")  // 去掉空格,否则长度太长,无法使用get方法
+                // 这个方法用于modal每次hide时清除数据
+                $("#p_info").on("hidden.bs.modal", function () {
+                    $(this).removeData();
+                });
+                if(pro_data != ""){
+                    $(this).attr("href", "/lookproject/?pro_data="+pro_data);
+                }else{
+                    $(this).removeAttr("href");// 去除属性
+                }
+            });
+
+            $("#mainBody").find("a[name='modify']").click(function(){
+                var pro_data = $(this).parent().find("li[isChecked='true']").text();    // 选中的某个li标签
+                pro_data = Trim(pro_data,"g")  // 去掉空格,否则长度太长,无法使用get方法
+                // 这个方法用于modal每次hide时清除数据
+                $("#p_info").on("hidden.bs.modal", function () {
+                    $(this).removeData();
+                });
+                if(pro_data != ""){
+                    $(this).attr("href", "/modifyproject/?pro_data="+pro_data);
+                }else{
+                    $(this).removeAttr("href");
+                }
+            });
+
+            // 改变项目状态
+            $("div button").click(function(){
+                var myaction = $(this).attr("name");                                //按钮操作(开始、结束、取消、恢复)
+                var data = $(this).parent().find("li[isChecked='true']").text();    // 选中的某个li标签
+                if(data == ""){
+                    alert("没选中!")
+                }else if(myaction != "look" && myaction != "modify"){   // 不是点了查看和修改
+                    var url = "/ajaxdealproject/";
+                    var data = {
+                        "myaction": myaction,
+                        "data": data
+                    };
+                    $.ajax({
+                        url: url,
+                        data: data,
+                        type: "post",
+                        success: function (data) {
+                            if (!data.status) {
+                                alert(data.data);
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+
+
+            $("#btn_add_test_task").click(function(){
+                $("#mainBody").hide()
+                $("#add_test_task").show()
+                $("#add_dev_task").hide()
+            });
+            $("#btn_add_dev_task").click(function(){
+                $("#mainBody").hide()
+                $("#add_test_task").hide()
+                $("#add_dev_task").show()
+            });
+
+        // 增加测试任务排期 ajax处理
+        $('#add_test_task a').click(function(){
+            /*
+              获取所有表单数据
+            */
+            var t_name = $('#add_test_task').find("input[name='t_name']").val();
+            // 获取radio的值
+            var t_is_performance = $('#add_test_task').find("input[name='1_isperformance']:checked").val();
+            var t_type = $('#add_test_task').find("select[name='t_type']").find("option:selected").text();
+            // 获取select被选中的值
+            var t_manager = $('#add_test_task').find("select[name='t_manager']").find("option:selected").text();
+            // 多个
+            var f_testers = $('#add_test_task').find("select[name='t_f_tester']").find("option:selected").text();
+            var s_testers = $('#add_test_task').find("select[name='t_s_tester']").find("option:selected").text();
+            // alert(t_manager+t_tester+t_s_tester);
+            var t_pre_start_time = $('#add_test_task').find("input[name='t_pre_start_time']").val();
+            var t_test_time = $('#add_test_task').find("input[name='t_test_time']").val();
+            var t_pre_end_time = $('#add_test_task').find("input[name='t_pre_end_time']").val();
+            var t_re_start_time = $('#add_test_task').find("input[name='t_re_start_time']").val();
+            var t_re_end_time = $('#add_test_task').find("input[name='t_re_end_time']").val();
+            var t_pro_release_time = $('#add_test_task').find("input[name='t_pro_release_time']").val();
+            var t_status = $('#add_test_task').find("select[name='t_status']").find("option:selected").text();
+            var t_phase = $('#add_test_task').find("input[name='t_phase']").val();
+            var t_target = $('#add_test_task').find("textarea[name='t_target']").val();
+            var attribute = $('#add_test_task').find("input[name='t_task_attribute']").val()
+
+            var url = "/addtask/";
+            var data = {
+                "t_name":t_name,
+                "t_is_performance":t_is_performance,
+                "t_type":t_type,
+                "t_manager":t_manager,
+                "t_tester":f_testers,
+                "t_s_tester":s_testers,
+                "t_pre_start_time":t_pre_start_time,
+                "t_test_time":t_test_time,
+                "t_pre_end_time":t_pre_end_time,
+                "t_re_start_time":t_re_start_time,
+                "t_re_end_time":t_re_end_time,
+                "t_pro_release_time":t_pro_release_time,
+                "t_status":t_status,
+                "t_phase":t_phase,
+                "t_target":t_target,
+                'attribute':attribute
+            };
+            if(t_name == "" || f_testers == "" || s_testers == ""){
+                $("#modal_alert").modal();
+            }else{
+                // ajax发送数据
+                $.ajax({
+                    url:url,
+                    data:data,
+                    type:"POST",
+                    success:function(data){
+                        if(data == 1){
+                            alert("增加成功!");
+                            location.reload();
+                        }else if(data == 0){
+                            alert("增加失败!");
+                        }
+                    }
+                });
+            }
+        });
+
+        // 增加开发任务排期 ajax处理
+        $("#add_dev_task a").click(function(){
+            /*
+              获取所有表单数据
+            */
+            var d_name = $('#add_dev_task').find("input[name='d_name']").val();
+            // 获取radio的值
+            var d_is_performance = $('#add_dev_task').find("input[name='2_isperformance']:checked").val();
+            var d_type = $('#add_dev_task').find("select[name='d_type']").find("option:selected").text();
+            // 获取select被选中的值
+            var d_product_manager = $('#add_dev_task').find("select[name='d_product_manager']").find("option:selected").text();
+            var d_project_manager = $('#add_dev_task').find("select[name='d_project_manager']").find("option:selected").text();
+            var d_dever = $('#add_dev_task').find("select[name='d_dever']").find("option:selected").text();
+            var d_start_time = $('#add_dev_task').find("input[name='d_start_time']").val();
+            var d_dev_time = $('#add_dev_task').find("input[name='d_dev_time']").val();
+            var d_test_time = $('#add_dev_task').find("input[name='d_test_time']").val();
+            var d_use_time = $('#add_dev_task').find("input[name='d_use_time']").val();
+            var d_release_time = $('#add_dev_task').find("input[name='d_release_time']").val();
+            var d_end_time = $('#add_dev_task').find("input[name='d_end_time']").val();
+            var d_status = $('#add_dev_task').find("select[name='d_status']").find("option:selected").text();
+            var d_phase = $('#add_dev_task').find("input[name='d_phase']").val();
+            var d_target = $('#add_dev_task').find("textarea[name='d_target']").val();
+            var attribute = $('#add_dev_task').find("input[name='d_task_attribute']").val()
+
+            var url = "/addtask/";
+            var data = {
+                "d_name":d_name,
+                "d_is_performance":d_is_performance,
+                "d_type":d_type,
+                "d_product_manager":d_product_manager,
+                "d_project_manager":d_project_manager,
+                "d_dever":d_dever,
+                "d_start_time":d_start_time,
+                "d_dev_time":d_dev_time,
+                "d_test_time":d_test_time,
+                "d_use_time":d_use_time,
+                "d_release_time":d_release_time,
+                "d_end_time":d_end_time,
+                "d_status":d_status,
+                "d_phase":d_phase,
+                "d_target":d_target,
+                'attribute':attribute
+            };
+            if(d_name == "" || d_product_manager == "" || d_project_manager == "" || d_dever == ""){
+                $("#modal_alert").modal();
+            }else{
+                // ajax发送数据
+                $.ajax({
+                    url:url,
+                    data:data,
+                    type:"POST",
+                    success:function(data){
+                        if(data == 1){
+                            alert("增加成功!");
+                            location.reload();
+                        }else if(data == 0){
+                            alert("增加失败!");
+                        }
+                    }
+                });
+            }
+        });
+    });
+    </script>
+
+
+{% endblock %}
+
+{% block foot %}
+
+{% endblock %}
+</body>
+</html>

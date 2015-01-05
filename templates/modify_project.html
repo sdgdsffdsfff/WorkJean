@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="content-Type" content="text/html" charset="UTF-8">
+    <title></title>
+</head>
+<style type="text/css">
+    table{
+        font-size: 16px;
+        margin-top: 20px;
+        margin-right: 10px;
+    }
+</style>
+<body>
+<div class="container-fluid">
+{% if pro_info.t_id %}
+    <table class="table table-bordered table-condensed table-hover">
+            <!--隐藏字段,用来区分是测试或开发项目-->
+            <input name="attribute" type="hidden" value="1"></td>
+            <tr>
+                <td style="width: 25%;">编号</td>
+                <td><input name="task_id" class="form-control" value="{{ pro_info.t_id }}" readonly></td>
+            </tr>
+            <tr>
+                <td>项目名称</td>
+                <td><input name="t_name" class="form-control" value="{{ pro_info.t_name }}"></td>
+            </tr>
+            <tr>
+                <td>性能</td>
+                <td><input name="t_is_performance" class="form-control" value="{{ pro_info.t_is_performance }} (0否  1是)"></td>
+            </tr>
+            <tr>
+                <td>项目类型</td>
+                <td><input name="t_type" class="form-control" value="{{ pro_info.t_type }} (X新项目  G技术改造  N内部项目)"></td>
+            </tr>
+            <tr>
+                <td>项目经理</td>
+                <td><input name="t_manager" class="form-control" value="{{ pro_info.t_manager }}"></td>
+            </tr>
+            <tr>
+                <td>实施测试人员</td>
+                <td><input name="t_s_tester" class="form-control" value="{{ pro_info.t_s_tester }}"></td>
+            </tr>
+            <tr>
+                <td>前置开始时间</td>
+                <td><input name="t_pre_start_time" class="form-control" value="{{ pro_info.t_pre_start_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>提测时间</td>
+                <td><input name="t_test_time" class="form-control" value="{{ pro_info.t_test_timet | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>前置结束时间</td>
+                <td><input name="t_pre_end_time" class="form-control" value="{{ pro_info.t_pre_end_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>回归开始时间</td>
+                <td><input name="t_re_start_time" class="form-control" value="{{ pro_info.t_re_start_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>回归结束时间</td>
+                <td><input name="t_re_end_time" class="form-control" value="{{ pro_info.t_re_end_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>项目发布时间</td>
+                <td><input name="t_pro_release_time" class="form-control" value="{{ pro_info.t_pro_release_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>项目当前阶段</td>
+                <td><input name="t_phase" class="form-control" value="{{ pro_info.t_phase }}"></td>
+            </tr>
+            <tr>
+                <td>目标</td>
+                <td><input name="t_target" class="form-control" value="{{ pro_info.t_target }}"></td>
+            </tr>
+    </table>
+
+{% else %}
+    <table class="table table-bordered table-condensed table-hover">
+            <!--隐藏字段,用来区分是测试或开发项目-->
+            <input name="attribute" type="hidden" value="2"></td>
+            <tr>
+                <td>编号</td>
+                <td><input name="task_id" class="form-control" value="{{ pro_info.d_id }}" readonly></td>
+            </tr>
+            <tr>
+                <td>项目名称</td>
+                <td><input name="d_name" class="form-control" value="{{ pro_info.d_name }}"></td>
+            </tr>
+            <tr>
+                <td>性能</td>
+                <td><input name="d_is_performance" class="form-control" value="{{ pro_info.d_is_performance }} (0否  1是)"></td>
+            </tr>
+            <tr>
+                <td>项目类型</td>
+                <td><input name="d_type" class="form-control" value="{{ pro_info.d_type }} (X新项目  G技术改造  N内部项目)"></td>
+            </tr>
+            <tr>
+                <td>产品经理</td>
+                <td><input name="d_product_manager" class="form-control" value="{{ pro_info.d_product_manager }}"></td>
+            </tr>
+            <tr>
+                <td>项目经理</td>
+                <td><input name="d_project_manager" class="form-control" value="{{ pro_info.d_project_manager }}"></td>
+            </tr>
+            <tr>
+                <td>开发人员</td>
+                <td><input name="d_dever" class="form-control" value="{{ pro_info.d_dever }}"></td>
+            </tr>
+            <tr>
+                <td>开始时间</td>
+                <td><input name="d_start_time" class="form-control" value="{{ pro_info.d_start_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>开发时间</td>
+                <td><input name="d_dev_time" class="form-control" value="{{ pro_info.d_dev_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>测试时间</td>
+                <td><input name="d_test_time" class="form-control" value="{{ pro_info.d_test_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>试用时间</td>
+                <td><input name="d_use_time" class="form-control" value="{{ pro_info.d_use_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>发布时间</td>
+                <td><input name="d_release_time" class="form-control" value="{{ pro_info.d_release_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>结束时间</td>
+                <td><input name="d_end_time" class="form-control" value="{{ pro_info.d_end_time | date:"Y-m-d" | default:None }}"></td>
+            </tr>
+            <tr>
+                <td>当前阶段</td>
+                <td><input name="d_phase" class="form-control" value="{{ pro_info.d_phase }}"></td>
+            </tr>
+            <tr>
+                <td>目标</td>
+                <td><input name="d_target" class="form-control" value="{{ pro_info.d_target }}"></td>
+            </tr>
+    </table>
+{% endif %}
+    <p style="float: right;">
+        <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+        <a type="button" class="btn btn-primary" id="submit">submit</a>
+    </p>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var before_data = {}
+        var after_data = {}
+        var ajax_data = {}
+        // 页面渲染时获取所有input的值
+        $("table input:not(:disabled)").each(function(){
+            before_data[$(this).attr("name")] = $(this).val();
+        });
+        // var data_string = JSON.stringify(before_data);
+        // var data_json = JSON.parse(data_string);
+        // 当修改提交时获取所有input的值
+        $("#submit").click(function(){
+            $("table input").each(function(){
+                after_data[$(this).attr("name")] = $(this).val();
+            });
+            // 判断哪个值变了
+            var count = 0;  // 可用于判断是否有值改变(为0说明没有改变)
+            for(var k in before_data){
+                // 测试项目or开发项目
+                ajax_data["attribute"] = after_data["attribute"];
+                // 项目编号
+                ajax_data["task_id"] = after_data["task_id"];
+                // 其余改变字段
+                if(before_data[k] != after_data[k]){
+                    //alert(k+"字段的值变了!");
+                    ajax_data[k] = after_data[k];
+                    count ++;
+                }
+            }
+            // 不等于0说明有字段值改变
+            if(count != 0){
+                var url = "/ajaxmodifyproject/";
+                var data = ajax_data;
+                $.ajax({
+                    url:url,
+                    data:data,
+                    type:"POST",
+                    success:function(data){
+                        if(data == 1){
+                            alert("修改成功!");
+                            location.reload();
+                        }else if(data == 0){
+                            alert("修改失败!");
+                        }
+                    }
+                });
+            }else{
+                alert("没有字段的值被改变!");
+            }
+        });
+    });
+</script>
+</body>
+</html>

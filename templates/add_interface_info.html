@@ -1,0 +1,187 @@
+{% extends "Task.html" %}
+{% load pagination_tags %}
+<!DOCTYPE html>
+<html>
+{% block head %}{{ block.super }}{% endblock %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+
+{% block mainbody %}
+    <!-- mainbody -->
+    <style type="text/css">
+        body{
+            background-color: #ffffff;
+        }
+        table tr td{
+            border: 1px solid #000000;;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("button").click(function(){
+                // 点击增加按钮
+                if($(this).attr("name") == "add"){
+                    $("#modal_add").modal();
+                    $("#calc").click(function(){
+                        var case_num = $("#modal_add").find("input[name='case_num']").val();
+                        var pass_num = $("#modal_add").find("input[name='pass_num']").val();
+                        if(case_num==""||pass_num==""){
+                            alert("测试用例数和通过用例数不能为空!");
+                        }else {
+                            $("#modal_add").find("input[name='pass_rate']").val((pass_num / case_num * 100).toFixed(2));
+                        }
+                    });
+                    $("#submit").click(function(){
+                        var name = $("#modal_add").find("input[name='name']").val();
+                        var case_num = $("#modal_add").find("input[name='case_num']").val();
+                        var pass_num = $("#modal_add").find("input[name='pass_num']").val();
+                        var upass_num = $("#modal_add").find("input[name='upass_num']").val();
+                        var check_num = $("#modal_add").find("input[name='check_num']").val();
+                        var pass_rate = $("#modal_add").find("input[name='pass_rate']").val();
+                        var bug_find_num = $("#modal_add").find("input[name='bug_find_num']").val();
+                        var bug_ufind_num = $("#modal_add").find("input[name='bug_ufind_num']").val();
+                        if(name==""||case_num==""||pass_num==""||upass_num==""||check_num==""||pass_rate==""||bug_find_num==""||bug_ufind_num==""){
+                            alert("不能为空!");
+
+                        }else{
+                            var url = "/ajaxaddinterfaceinfo/";
+                            var data = {
+                                "task_id":"{{ task_id }}",
+                                "name":name,
+                                "case_num":case_num,
+                                "pass_num":pass_num,
+                                "upass_num":upass_num,
+                                "check_num":check_num,
+                                "pass_rate":pass_rate,
+                                "bug_find_num":bug_find_num,
+                                "bug_ufind_num":bug_ufind_num
+                            };
+                            $.ajax({
+                                url:url,
+                                data:data,
+                                type:"POST",
+                                success:function(res){
+                                    alert(res);
+                                    location.reload();
+                                }
+                            });
+                        }
+                    });
+                }
+                // 生成excel格式的测试报告
+                if($(this).attr("name") == "generate"){
+                    var url = "/generate_excel/";
+                    var data = {
+                        "task_id":"{{ task_id }}"
+                    }
+                    $.post(url,data,function(res){
+                        alert(res);
+                    })
+                }
+            });
+        });
+    </script>
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li><a href="#">配置管理</a></li>
+            <li><a href="/interface_config/?type=接口信息管理">接口信息管理</a></li>
+            <li class="active">"{{ task_name }}"项目的接口信息</li>
+        </ol>
+    </div>
+    <div class="container">
+        <div id="mailContent">
+            <table class="table-condensed" style="text-align: center; width: 100%;">
+                <thead>
+                    <tr>
+                        <td colspan="8" style="background-color: rgb(0,112,192); color: #ffffff; font-weight: bold;">{{ task_name }}接口测试数据统计</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" style="background-color: rgb(0,176,80);">{{ task_name }}</td>
+                        <td colspan="7" style="background-color: rgb(252,213,180);">验收结果</td>
+                    </tr>
+                    <tr>
+                        <td>测试用例</td>
+                        <td style="background-color: rgb(146,208,80);">通过用例</td>
+                        <td style="background-color: #ff0000; color: #ffffff;">失败用例</td>
+                        <td>检查点数</td>
+                        <td>发现BUG数</td>
+                        <td>遗漏BUG数</td>
+                        <td style="background-color: rgb(218,238,243);">通过率</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if interface_info %}
+                        {% for res in interface_info %}
+                        <tr>
+                            <td style="background-color: rgb(235,241,222);">{{ res.i_name }}</td>
+                            <td>{{ res.i_case_num }}</td>
+                            <td style="background-color: rgb(146,208,80);">{{ res.i_case_pass_num }}</td>
+                            <td style="background-color: #ff0000; color: #ffffff;">{{ res.i_case_upass_num }}</td>
+                            <td>{{ res.i_case_check_num }}</td>
+                            <td>{{ res.i_case_bug_find_num }}</td>
+                            <td>{{ res.i_case_bug_ufind_num }}</td>
+                            <td style="background-color: rgb(218,238,243);">{{ res.i_case_pass_rate }}%</td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                    <tr>
+                        <td style="background-color: rgb(235,241,222);">总计</td>
+                        <td>{{ all_info.case_num }}</td>
+                        <td style="background-color: rgb(146,208,80);">{{ all_info.pass_num }}</td>
+                        <td style="background-color: #ff0000; color: #ffffff;">{{ all_info.upass_num }}</td>
+                        <td>{{ all_info.check_num }}</td>
+                        <td>{{ all_info.bug_find_num }}</td>
+                        <td>{{ all_info.bug_ufind_num }}</td>
+                        <td style="background-color: rgb(218,238,243);">{{ all_info.pass_rate }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--add interface info panel-->
+        <div class="modal fade" data-backdrop="static" id="modal_add" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+                        <h4 class="modal-title">增加接口信息_项目编号:{{ task_id }}</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <input class="form-control" type="text" name="name" placeholder="输入接口名称"/><br/>
+                        <input class="form-control" type="text" name="case_num" placeholder="输入测试用例数"/><br/>
+                        <input class="form-control" type="text" name="pass_num" placeholder="输入通过用例数"/><br/>
+                        <input class="form-control" type="text" name="upass_num" placeholder="输入失败用例数"/><br/>
+                        <input class="form-control" type="text" name="check_num" placeholder="输入检查点数"/><br/>
+                        <input class="form-control" type="text" name="bug_find_num" placeholder="发现BUG数"/><br/>
+                        <input class="form-control" type="text" name="bug_ufind_num" placeholder="遗漏BUG数"/><br/>
+                        <input class="form-control" type="text" name="pass_rate" placeholder="通过率" disabled/>
+                    </div>
+
+                    <div class="modal-footer">
+                        <p>
+                            <a id="calc" type="button" class="btn btn-success">计算通过率</a>
+                            <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+                            <a id="submit" type="button" class="btn btn-primary">Submit</a>
+                        </p>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <div style="margin-top: 10px;">
+            <button href="#" class="btn btn-primary" name="add">增加</button>
+            <button href="#" class="btn btn-danger" name="del">删除</button>
+            <button href="#" class="btn btn-info" name="modify">修改</button>
+            <button href="#" class="btn btn-info" name="generate">生成测试报告</button>
+            <a href="/download/{{ task_name }}测试报告.xlsx" class="btn btn-success" name="download">下载测试报告</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block foot %}
+
+{% endblock %}
+</body>
+</html>

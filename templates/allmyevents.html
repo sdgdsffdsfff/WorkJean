@@ -1,0 +1,154 @@
+{% extends "Task.html" %}
+<!DOCTYPE html>
+<html>
+{% block head %}{{ block.super }}{% endblock %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+
+{% block mainbody %}
+    <!-- mainbody -->
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li class="active">我的任务</li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <!--测试任务-->
+    <table id="test_task_detail" class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <td colspan="15" style="background-color: #16A085;">测试任务</td>
+            </tr>
+            <tr style="background-color: #3498DB">
+                <td>编号</td>
+                <td>名称</td>
+                <td>性能</td>
+                <td>项目类型</td>
+                <td>项目经理</td>
+                <td>负责测试人员</td>
+                <td>实施测试人员</td>
+                <td>前置开始时间</td>
+                <td>提测时间</td>
+                <td>前置结束时间</td>
+                <td>回归开始时间</td>
+                <td>回归结束时间</td>
+                <td>项目发布时间</td>
+                <td>当前状态</td>
+                <td>目标</td>
+            </tr>
+        </thead>
+    <tbody>
+    {% if test_events %}
+    {% for test_event in test_events %}
+        {% for taskdetail in test_event  %}
+        <tr>
+            <td><a href="#">{{ taskdetail.t_id }}</a></td>
+            <td><a href="#">{{ taskdetail.t_name }}</a></td>
+            {% if taskdetail.t_is_performance == 0 %}
+                <td><a href="#">否</a></td>
+            {% else %}
+                <td><a href="#">是</a></td>
+            {% endif %}
+            <td><a href="#">{{ taskdetail.t_type }}</a></td>
+            <td><a href="#">{{ taskdetail.t_manager }}</a></td>
+            <td><a href="#">{{ taskdetail.t_tester }}</a></td>
+            <td><a href="#">{{ taskdetail.t_s_tester }}</a></td>
+            <td><a href="#">{{ taskdetail.t_pre_start_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.t_test_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.t_pre_end_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.t_re_start_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.t_re_end_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.t_pro_release_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.t_status }}</a></td>
+            <td><a href="#">{{ taskdetail.t_target }}</a></td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    {% endif %}
+    </tbody>
+    </table>
+    <!--测试任务over-->
+
+    <!--开发任务-->
+    <table id="dev_task_detail" class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <td colspan="15" style="background-color: #16A085;">开发任务</td>
+            </tr>
+            <tr style="background-color: #3498DB">
+                <td>编号</td>
+                <td>项目名称</td>
+                <td>性能</td>
+                <td>项目类型</td>
+                <td>产品经理</td>
+                <td>项目经理</td>
+                <td>开发人员</td>
+                <td>开始时间</td>
+                <td>开发时间</td>
+                <td>测试时间</td>
+                <td>试用时间</td>
+                <td>发布时间</td>
+                <td>结束时间</td>
+                <td>当前状态</td>
+                <td>目标</td>
+            </tr>
+        </thead>
+    <tbody>
+    {% if dev_events %}
+    {% for dev_event in dev_events %}
+        {% for taskdetail in dev_event %}
+        <tr>
+            <td><a href="#">{{ taskdetail.d_id }}</a></td>
+            <td><a href="#">{{ taskdetail.d_name }}</a></td>
+            {% if taskdetail.d_is_performance == 0 %}
+                <td><a href="#">否</a></td>
+            {% else %}
+                <td><a href="#">是</a></td>
+            {% endif %}
+            <td><a href="#">{{ taskdetail.d_type }}</a></td>
+            <td><a href="#">{{ taskdetail.d_product_manager }}</a></td>
+            <td><a href="#">{{ taskdetail.d_project_manager }}</a></td>
+            <td><a href="#">{{ taskdetail.d_dever }}</a></td>
+            <td><a href="#">{{ taskdetail.d_start_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.d_dev_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.d_test_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.d_use_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.d_release_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.d_end_time | date:"Y-m-d" | default:None }}</a></td>
+            <td><a href="#">{{ taskdetail.d_status }}</a></td>
+            <td><a href="#">{{ taskdetail.d_target }}</a></td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    {% endif %}
+    </tbody>
+    </table>
+    <!--开发任务over-->
+
+    <!--javascript-->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('tbody tr td a').each(function(){
+                // 单元格中的内容
+                var a = $(this).text();
+                // 增加属性使得支持tooltip
+                $(this).attr('class','atip');
+                $(this).attr('data-toggle','tooltip');
+                $(this).attr('data-original-title',a);
+                // 激活tooltip
+                $(".atip").tooltip();
+                // 当td内的文本超过15个字的时候截断
+                if(a.length > 10){
+                    a = a.substring(0,10)+"...";//截断,加上"..."
+                    $(this).html(a);
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
+</body>
+</html>

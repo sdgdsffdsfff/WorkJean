@@ -1,0 +1,72 @@
+{% extends "Task.html" %}
+<!DOCTYPE html>
+<html>
+{% block head %}{{ block.super }}{% endblock %}
+<body>
+{% block nav %}{{ block.super }}{% endblock %}
+
+{% block mainbody %}
+    <!-- mainbody -->
+    <div class="main">
+        <ol class="breadcrumb">
+            <li><a href="/index/">首页</a></li>
+            <li><a href="#">配置管理</a></li>
+            <li class="active">{{ config_type }}(已完结测试项目)</li>
+        </ol>
+    </div>
+
+    <div style="float: left;" id="search_form">
+        <form class="navbar-form navbar-right" role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="请输入项目名称查询">
+            </div>
+            <a type="submit" id="submit" class="btn btn-primary">搜索</a>
+        </form>
+    </div>
+
+    <!--ajax加载容器-->
+    <div style="margin:15px;" id="ajax_content_interface_info"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            // 页面加载的时候加载ajax内容
+            var url = "/ajaxgetinterfaceinfo/";
+            var data = {
+                "what_task":"All"
+            }
+            $.post(url,data,function(res){
+                $("#ajax_content_interface_info").html(res);
+            });
+
+            // 点击搜索按钮
+            $("#submit").click(function(){
+                var url = "/ajaxgetinterfaceinfo/";
+                var what_task = $("#search_form").find("input").val();
+                if(what_task==""){
+                    what_task = "All";
+                }
+                var data = {
+                    "what_task":what_task
+                }
+                $.post(url,data,function(res){
+                    $("#ajax_content_interface_info").html(res);
+                });
+            });
+
+            // 禁止回车键
+            $(document).keypress(function(e){
+                if(e.which == 13){
+                    return false;
+                }
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
+{% block foot %}
+
+{% endblock %}
+</body>
+</html>
